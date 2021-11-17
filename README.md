@@ -12,7 +12,7 @@ Key features and concepts demonstrated in this project:
  - **Optional debug data display** for in-field troubleshooting
 
 ### In-Field Configuration Options
-The sensor is highly configurable in-field, using [WiFiManager](https://github.com/tzapu/WiFiManager) to present a captive portal-based configuration interface.  The following options may be configured:
+The sensor is highly configurable in-field, using [WiFiManager](https://github.com/tzapu/WiFiManager) to present a captive portal-based configuration interface.  The captive portal is loaded when no condfiguration file is present or the "Mode" button is held while cycling power to the device.  The following options may be configured:
 
  - **Sensor ID:** A unique identifier to enable identification for error reporting
  - **API Host:** Hostname of the REST API endpoint (e.g. api.thingspeak.com)
@@ -36,19 +36,19 @@ The sensor is highly configurable in-field, using [WiFiManager](https://github.c
  - **Additional Configuration Flags:** First 7 bits changes default number of cycles (10) between RF calibrations on wake, 8th bit enables debug mode *(optional)*
 
 ### Super-Short Runtime
-The code represents the shortest possible runtime I could manage, to ensure the longest possible lifespan on battery.  In testing, all non-HTTP actions (including connecting to Wi-Fi) take around 200ms to complete - the remaining runtime is determined by the RTT to your REST API endpoint.   This can be well under 100ms if you're in the US, which would yield years of runtime on 3 AAA cells with a suitable reporting interval.
+The code represents the shortest possible runtime I could manage, to ensure the longest possible lifespan on battery.  In testing, all non-HTTP actions (including connecting to Wi-Fi) take around 200ms to complete - the remaining runtime is determined by the round trip time to your REST API endpoint.   This can be well under 100ms if you're in the US, which would yield years of runtime on 3 AAA cells with a suitable reporting interval.
 
 ### Three-Mode Reporting Interval
 Three reporting intervals are configurable.  These intervals determine the time the device remains in deep sleep (minus runtime, so as to maintain a semi-regular reporting interval).  Here's when these intervals are active:
 
  - **Default:** Normal interval used unless any of the below applies.
- - **Short:** If a rate of change greater between the current and previous temperature reading is greater than the value configured for *'Temperature Change Threshold'*, or if the previous Wi-Fi, HTTP or REST API connection returned an error.
- - **Hibernate:** If the number of successive error results exceeds the value configured for *'Failure Limit Before Hibernation'*.
+ - **Short:** If the rate of change between the current and previous temperature reading is greater than the value configured for *'Temperature Change Threshold'*, or if the previous Wi-Fi/HTTP connection or REST API response returned an error.
+ - **Hibernate:** If the number of successive error results exceeds the value configured for *'Failure Limit Before Hibernation'*.  This is intended to preseve battery life during persistent error conditions.
 
 ### Low Battery Condition Alerting
 To avoid a sensor going offline due to a flat battery, each sensor can report a low voltage condition to a single ThingSpeak field.  As each ThingSpeak channel allows for only 8 sensors, reporting on each sensor's voltage limits the number of sensors we can deploy.
 
-To work around this, each sensor is configured with a unique ID between 1 and 255, which it will report to the configured "Error" field on a low voltage condition.  This allows up to 7 sensors to report their status to a single field.  Each sensor will report a "0" to this field if low voltage condition reporting is enabled and the sensor voltage is sufficient.
+To work around this, each sensor is configured with a unique ID between 1 and 255, which it will report to the configured *"Error"* field on a low voltage condition.  This allows up to 7 sensors to report their status to a single field.  Each sensor will report a "0" to this field if low voltage condition reporting is enabled and the sensor voltage is sufficient.
 
 ### Optional Debug Data Display
 By setting the 8th bit of the "Flags" field (e.g. 128), a debug mode is enabled.  Debug mode will display data from a file that is written on an error condition containing the following values:
