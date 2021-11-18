@@ -12,7 +12,7 @@ Key features and concepts demonstrated in this project:
  - **Optional debug data display** for in-field troubleshooting
 
 ### In-Field Configuration Options
-The sensor is highly configurable in-field, using [WiFiManager](https://github.com/tzapu/WiFiManager) to present a captive portal-based configuration interface.  The captive portal is loaded when no condfiguration file is present or the "Mode" button is held while cycling power to the device.  The following options may be configured:
+The sensor is highly configurable in-field, using [WiFiManager](https://github.com/tzapu/WiFiManager) to present a captive portal-based configuration interface.  The captive portal is loaded when no configuration file is present or the "Mode" button is held while cycling power to the device.  The following options may be configured:
 
  - **Sensor ID:** A unique identifier to enable identification for error reporting
  - **API Host:** Hostname of the REST API endpoint (e.g. api.thingspeak.com)
@@ -32,7 +32,7 @@ The sensor is highly configurable in-field, using [WiFiManager](https://github.c
  - **IP Address / Subnet Mask / Gateway:** Static IP configuration options, configure for shorter runtimes *(optional)*
  - **Temperature Precision:** 1 - 4 corresponds to precision of 0.5°C, 0.25°C, 0.125°C, or 0.0625°C, higher values increase runtime and reduce battery life, 2 is your best compromise *(optional)*
  - **RTC Correction Factor:** Factor by which to correct sleep times (e.g 1.07).  Some ESP8266 modules run fast in deep sleep and may wake up several seconds earlier than expected *(optional)*
- - **Disable LED:** Disable LED during REST API request; leave enabled to give a visual representation of the HTTP request length.
+ - **Disable LED:** Disable LED during REST API request; leave enabled to give a visual representation of the HTTP request length
  - **Additional Configuration Flags:** First 7 bits changes default number of cycles (10) between RF calibrations on wake, 8th bit enables debug mode *(optional)*
 
 ### Super-Short Runtime
@@ -51,12 +51,12 @@ To avoid a sensor going offline due to a flat battery, each sensor can report a 
 To work around this, each sensor is configured with a unique ID between 1 and 255, which it will report to the configured *"Error"* field on a low voltage condition.  This allows up to 7 sensors to report their status to a single field.  Each sensor will report a "0" to this field if low voltage condition reporting is enabled and the sensor voltage is sufficient.
 
 ### Optional Debug Data Display
-By setting the 8th bit of the "Flags" field (e.g. 128), a debug mode is enabled.  Debug mode will display data from a file that is written on an error condition containing the following values:
+By setting the 8th bit of the *"Flags"* field (e.g. 128), a debug mode is enabled.  Debug mode will display data from a file that is written on an error condition containing the following values:
 
  - Wi-Fi connection result
- -  HTTP status
+ - HTTP status
  - API response
- -  Temperature
+ - Temperature
  - Configuration file size
 
 This data is displayed at the bottom of the captive portal configuration screen.  Enabling debug mode will force the device to always boot to the captive portal; unsetting the 8th bit will revert to normal behaviour. 
